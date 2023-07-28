@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using DevFolder.Commands;
 using DevFolder.Operations;
-using DevFolder.Options;
+using DevFolder.Verbs;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO.Abstractions;
 

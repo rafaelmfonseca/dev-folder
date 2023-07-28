@@ -1,5 +1,5 @@
 ﻿using DevFolder.Operations;
-using DevFolder.Options;
+using DevFolder.Verbs;
 using System.IO.Abstractions;
 
 namespace DevFolder.Commands;

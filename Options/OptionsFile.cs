@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
 
-namespace DevFolder.Options;
+namespace DevFolder.Verbs;
 
 public class OptionsFile
 {
