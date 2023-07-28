@@ -6,11 +6,16 @@ namespace DevFolder.Commands;
 
 public class CloneCommand
 {
+    private readonly GitCloneOperation _gitCloneOperation;
     private readonly OptionsFile _optionsFile;
     private readonly IFileSystem _fileSystem;
 
-    public CloneCommand(OptionsFile optionsFile, IFileSystem fileSystem)
+    public CloneCommand(
+        GitCloneOperation gitCloneOperation,
+        OptionsFile optionsFile,
+        IFileSystem fileSystem)
     {
+        _gitCloneOperation = gitCloneOperation;
         _optionsFile = optionsFile;
         _fileSystem = fileSystem;
     }
@@ -18,8 +23,6 @@ public class CloneCommand
     public async Task Execute()
     {
         var options = await _optionsFile.Read();
-
-        var gitCloneOperation = new GitCloneOperation();
 
         foreach (var category in options.Categories)
         {
@@ -50,7 +53,7 @@ public class CloneCommand
             {
                 var repositoryFolder = !string.IsNullOrEmpty(repository.Folder) ? Path.Combine(categoryPath, repository.Folder) : categoryPath;
 
-                await gitCloneOperation.Execute(repository.Url, repositoryFolder);
+                await _gitCloneOperation.Execute(repository.Url, repositoryFolder);
             }
         }
     }
