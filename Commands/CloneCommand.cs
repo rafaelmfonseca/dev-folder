@@ -1,40 +1,23 @@
 ﻿using DevFolder.Operations;
-using System.Text.Json;
-using System.Collections.Generic;
-using System.IO;
+using DevFolder.Options;
 using System.IO.Abstractions;
 
-namespace DevFolder.Options;
+namespace DevFolder.Commands;
 
-public class ConfigFile
+public class CloneCommand
 {
-    private readonly string _fileName = "options.json";
+    private readonly OptionsFile _optionsFile;
     private readonly IFileSystem _fileSystem;
 
-    public ConfigFile(IFileSystem fileSystem)
+    public CloneCommand(OptionsFile optionsFile, IFileSystem fileSystem)
     {
+        _optionsFile = optionsFile;
         _fileSystem = fileSystem;
     }
 
-    public async Task Read()
+    public async Task Execute()
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
-        var optionsPath = Path.Combine(currentDirectory, _fileName);
-
-        if (_fileSystem.File.Exists(optionsPath))
-        {
-            throw new InvalidOperationException("Options file does not exist!");
-        }
-
-        var optionsContent = _fileSystem.File.Open(optionsPath, FileMode.Open);
-
-        var options = await JsonSerializer.DeserializeAsync<OptionsDefinition>(optionsContent);
-
-        if (options is null || !options.HasCategories())
-        {
-            throw new InvalidOperationException("Options file is empty!");
-        }
+        var options = await _optionsFile.Read();
 
         var gitCloneOperation = new GitCloneOperation();
 
@@ -47,12 +30,14 @@ public class ConfigFile
 
             if (string.IsNullOrWhiteSpace(category.Folder))
             {
-                Console.WriteLine("Category folder is empty!");
+                Console.WriteLine("Found an empty category folder!");
 
                 continue;
             }
 
             Console.WriteLine($"Current category folder: {category.Folder}");
+
+            var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
 
             var categoryPath = Path.Combine(currentDirectory, category.Folder);
 

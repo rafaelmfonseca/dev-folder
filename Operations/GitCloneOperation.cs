@@ -26,6 +26,8 @@ public class GitCloneOperation
 
     private async Task ExecuteOnLinux(string url, string folder)
     {
+        Console.WriteLine(@$"Cloning ""{url}"" into ""{folder}"" for Linux...");
+
         var command = @$"git clone {url} ""{folder}""";
 
         var process = new Process

@@ -1,19 +1,37 @@
 ﻿using CommandLine;
+using DevFolder.Commands;
+using DevFolder.Operations;
 using DevFolder.Options;
-using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO.Abstractions;
 
-public class Program
+public sealed class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        Parser.Default.ParseArguments<CloneVerb>(args).MapResult(
-            (CloneVerb options) => RunCloneAndReturnExitCode(options),
-            (IEnumerable<Error> errors) => 1);
-    }
+        var result = Parser.Default.ParseArguments<CloneVerb>(args);
 
-    public static int RunCloneAndReturnExitCode(CloneVerb options)
-    {
+        if (result is null)
+        {
+            Console.WriteLine("Invalid arguments");
 
-        return 0;
+            return;
+        }
+
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection.AddScoped<IFileSystem, FileSystem>();
+        serviceCollection.AddScoped<OptionsFile>();
+        serviceCollection.AddScoped<CloneCommand>();
+        serviceCollection.AddScoped<GitCloneOperation>();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+
+        if (result is Parsed<CloneVerb>)
+        {
+            var cloneCommand = serviceProvider.GetService<CloneCommand>();
+
+            await cloneCommand.Execute();
+        }
     }
 } 
