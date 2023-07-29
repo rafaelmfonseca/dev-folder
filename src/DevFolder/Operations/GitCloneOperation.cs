@@ -1,49 +1,27 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using DevFolder.Platform;
+using Microsoft.Extensions.Logging;
 
 namespace DevFolder.Operations;
 
 public class GitCloneOperation
 {
-    private readonly OSPlatform _platform;
+    private readonly IProcessCommandHandler _processCommandHandler;
+    private readonly ILogger<GitCloneOperation> _logger;
 
-    public GitCloneOperation()
+    public GitCloneOperation(
+        IProcessCommandHandler processCommandHandler,
+        ILogger<GitCloneOperation> logger)
     {
-        _platform = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? OSPlatform.Windows : OSPlatform.Linux;
+        _processCommandHandler = processCommandHandler;
+        _logger = logger;
     }
 
-    public async Task Execute(string url, string folder)
+    public async Task Execute(string url, string? folder)
     {
-        if (_platform == OSPlatform.Linux)
-        {
-            await ExecuteOnLinux(url, folder);
-        }
-        else
-        {
-            throw new PlatformNotSupportedException("Windows is not supported yet!");
-        }
-    }
+        _logger.LogInformation(@$"Cloning ""{url}"" into ""{folder}""...");
 
-    private async Task ExecuteOnLinux(string url, string folder)
-    {
-        Console.WriteLine(@$"Cloning ""{url}"" into ""{folder}"" for Linux...");
+        var command = @$"git clone {url} {"\"" + folder + "\"" ?? string.Empty}";
 
-        var command = @$"git clone {url} ""{folder}""";
-
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "bash",
-                Arguments = $"-c \"{command}\"",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            }
-        };
-
-        process.Start();
-
-        await process.WaitForExitAsync();
+        await _processCommandHandler.RunCommandAsync(command);
     }
 }
