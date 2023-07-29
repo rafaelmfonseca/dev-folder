@@ -2,5 +2,5 @@
 
 public interface IGitCloneOperation
 {
-    Task Execute(string url, string folder = null);
+    Task Execute(string url, string workingDirectory, string repositoryFolderName = null);
 }

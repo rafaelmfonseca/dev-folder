@@ -17,9 +17,9 @@ public class GitCloneOperation : IGitCloneOperation
         _logger = logger;
     }
 
-    public async Task Execute(string url, string folder = null)
+    public async Task Execute(string url, string workingDirectory, string repositoryFolderName = null)
     {
-        _logger.LogInformation(@$"Cloning ""{url}"" into ""{folder}""...");
+        _logger.LogInformation(@$"Cloning ""{url}"" into ""{workingDirectory}"" with folder: ""{repositoryFolderName}""...");
 
         var sbCommand = new StringBuilder();
 
@@ -31,14 +31,14 @@ public class GitCloneOperation : IGitCloneOperation
             sbCommand.Append(url);
         }
 
-        if (!string.IsNullOrEmpty(folder))
+        if (!string.IsNullOrEmpty(repositoryFolderName))
         {
             sbCommand.Append(" ");
-            sbCommand.Append("\"" + folder + "\"");
+            sbCommand.Append("\"" + repositoryFolderName + "\"");
         }
 
         var processCommandHandler = _processCommandHandlerFactory.Create();
 
-        await processCommandHandler.RunCommandAsync(sbCommand.ToString());
+        await processCommandHandler.RunCommandAsync(sbCommand.ToString(), workingDirectory);
     }
 }

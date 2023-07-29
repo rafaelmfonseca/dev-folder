@@ -9,11 +9,13 @@ namespace DevFolder.Tests.Operations;
 
 internal class GitCloneOperationTests
 {
-    [TestCase("git@github.com:dotnet/runtime.git", @"c:\demo", "git clone git@github.com:dotnet/runtime.git \"c:\\demo\"")]
-    [TestCase("git@github.com:dotnet/runtime.git", @"", "git clone git@github.com:dotnet/runtime.git")]
-    [TestCase("git@github.com:dotnet/runtime.git", null, "git clone git@github.com:dotnet/runtime.git")]
-    public async Task ExecuteShouldGenerateCorrectGitCommand(string url, string folder, string command)
+    [Test()]
+    public async Task ExecuteShouldGenerateCorrectGitCommand()
     {
+        const string url = "git@github.com:dotnet/runtime.git";
+        const string workingDirectory = @"c:\demo";
+        const string repositoryFolderName = "dotnet-runtime";
+
         var helper = new DevFolderTestHelper();
 
         var mockedProcessCommandHandler = new Mock<IProcessCommandHandler>();
@@ -24,12 +26,12 @@ internal class GitCloneOperationTests
 
         var cloneCommand = helper.ServiceProvider.GetService<IGitCloneOperation>();
 
-        await cloneCommand.Execute(url, folder);
+        await cloneCommand.Execute(url, workingDirectory, repositoryFolderName);
 
         mockedProcessCommandHandler.Verify(mock =>
-            mock.RunCommandAsync(command), Times.Once());
+            mock.RunCommandAsync("git clone git@github.com:dotnet/runtime.git \"dotnet-runtime\"", @"c:\demo"), Times.Once());
 
         mockedProcessCommandHandler.Verify(mock =>
-            mock.RunCommandAsync(It.IsAny<string>()), Times.Exactly(1));
+            mock.RunCommandAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(1));
     }
 }

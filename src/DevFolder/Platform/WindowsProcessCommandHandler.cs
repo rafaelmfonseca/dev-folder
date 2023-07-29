@@ -12,7 +12,7 @@ public class WindowsProcessCommandHandler : IProcessCommandHandler
         _logger = logger;
     }
 
-    public async Task RunCommandAsync(string command)
+    public async Task RunCommandAsync(string command, string workingDirectory)
     {
         try
         {
@@ -22,6 +22,7 @@ public class WindowsProcessCommandHandler : IProcessCommandHandler
                 {
                     FileName = "cmd.exe",
                     Arguments = $"/c \"{command}\"",
+                    WorkingDirectory = workingDirectory,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,

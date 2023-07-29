@@ -28,6 +28,8 @@ public class CloneCommand
     {
         var options = await _optionsFile.Read();
 
+        var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
+
         foreach (var category in options.Categories)
         {
             if (category is null)
@@ -53,21 +55,16 @@ public class CloneCommand
 
             _logger.LogInformation($"Current category folder: {category.Folder}");
 
-            var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
+            var categoryDirectory = Path.Combine(currentDirectory, category.Folder);
 
-            var categoryPath = Path.Combine(currentDirectory, category.Folder);
-
-            if (!_fileSystem.Directory.Exists(categoryPath))
+            if (!_fileSystem.Directory.Exists(categoryDirectory))
             {
-                _fileSystem.Directory.CreateDirectory(categoryPath);
+                _fileSystem.Directory.CreateDirectory(categoryDirectory);
             }
 
             foreach (var repository in category.Repositories)
             {
-                var repositoryFolder = !string.IsNullOrEmpty(repository.Folder) ?
-                    Path.Combine(categoryPath, repository.Folder) : categoryPath;
-
-                await _gitCloneOperation.Execute(repository.Url, repositoryFolder);
+                await _gitCloneOperation.Execute(repository.Url, categoryDirectory, repository.Folder);
             }
         }
     }

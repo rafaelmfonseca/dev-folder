@@ -11,9 +11,9 @@ public class LogOnlyProcessCommandHandler : IProcessCommandHandler
         _logger = logger;
     }
 
-    public Task RunCommandAsync(string command)
+    public Task RunCommandAsync(string command, string workingDirectory)
     {
-        _logger.LogInformation($"Command executed: {command}");
+        _logger.LogInformation($"Command executed: \"{command}\", workingDirectory: \"{workingDirectory}\"");
 
         return Task.CompletedTask;
     }

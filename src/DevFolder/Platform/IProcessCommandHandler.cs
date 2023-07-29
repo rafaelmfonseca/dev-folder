@@ -2,5 +2,5 @@
 
 public interface IProcessCommandHandler
 {
-    Task RunCommandAsync(string command);
+    Task RunCommandAsync(string command, string workingDirectory);
 }

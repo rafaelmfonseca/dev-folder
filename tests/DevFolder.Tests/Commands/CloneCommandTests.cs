@@ -43,18 +43,18 @@ internal class CloneCommandTests
         await cloneCommand.Execute();
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:dotnet/runtime.git", @"c:\demo\csharp\dotnet_runtime"), Times.Once());
+            mock.Execute("git@github.com:dotnet/runtime.git", @"c:\demo\csharp", "dotnet_runtime"), Times.Once());
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:jbogard/MediatR.git", @"c:\demo\csharp"), Times.Once());
+            mock.Execute("git@github.com:jbogard/MediatR.git", @"c:\demo\csharp", null), Times.Once());
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:bitwarden/clients.git", @"c:\demo\angular\bitwarden_clients"), Times.Once());
+            mock.Execute("git@github.com:bitwarden/clients.git", @"c:\demo\angular", "bitwarden_clients"), Times.Once());
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:storybookjs/storybook.git", @"c:\demo\angular"), Times.Once());
+            mock.Execute("git@github.com:storybookjs/storybook.git", @"c:\demo\angular", null), Times.Once());
 
-        mockedGitCloneOperation.Verify(mock => mock.Execute(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(4));
+        mockedGitCloneOperation.Verify(mock => mock.Execute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(4));
     }
 
     [TestCase("")]
@@ -91,11 +91,12 @@ internal class CloneCommandTests
         await cloneCommand.Execute();
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:dotnet/runtime.git", @"c:\demo\csharp\dotnet_runtime"), Times.Once());
+            mock.Execute("git@github.com:dotnet/runtime.git", @"c:\demo\csharp", "dotnet_runtime"), Times.Once());
 
         mockedGitCloneOperation.Verify(mock =>
-            mock.Execute("git@github.com:jbogard/MediatR.git", @"c:\demo\csharp"), Times.Once());
+            mock.Execute("git@github.com:jbogard/MediatR.git", @"c:\demo\csharp", null), Times.Once());
 
-        mockedGitCloneOperation.Verify(mock => mock.Execute(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
+        mockedGitCloneOperation.Verify(mock =>
+            mock.Execute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(2));
     }
 }
