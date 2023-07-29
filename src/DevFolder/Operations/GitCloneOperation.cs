@@ -1,27 +1,44 @@
 ﻿using DevFolder.Platform;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace DevFolder.Operations;
 
-public class GitCloneOperation
+public class GitCloneOperation : IGitCloneOperation
 {
-    private readonly IProcessCommandHandler _processCommandHandler;
-    private readonly ILogger<GitCloneOperation> _logger;
+    private readonly IProcessCommandHandlerFactory _processCommandHandlerFactory;
+    private readonly ILogger<IGitCloneOperation> _logger;
 
     public GitCloneOperation(
-        IProcessCommandHandler processCommandHandler,
-        ILogger<GitCloneOperation> logger)
+        IProcessCommandHandlerFactory processCommandHandlerFactory,
+        ILogger<IGitCloneOperation> logger)
     {
-        _processCommandHandler = processCommandHandler;
+        _processCommandHandlerFactory = processCommandHandlerFactory;
         _logger = logger;
     }
 
-    public async Task Execute(string url, string? folder)
+    public async Task Execute(string url, string folder = null)
     {
         _logger.LogInformation(@$"Cloning ""{url}"" into ""{folder}""...");
 
-        var command = @$"git clone {url} {"\"" + folder + "\"" ?? string.Empty}";
+        var sbCommand = new StringBuilder();
 
-        await _processCommandHandler.RunCommandAsync(command);
+        sbCommand.Append("git clone");
+
+        if (!string.IsNullOrEmpty(url))
+        {
+            sbCommand.Append(" ");
+            sbCommand.Append(url);
+        }
+
+        if (!string.IsNullOrEmpty(folder))
+        {
+            sbCommand.Append(" ");
+            sbCommand.Append("\"" + folder + "\"");
+        }
+
+        var processCommandHandler = _processCommandHandlerFactory.Create();
+
+        await processCommandHandler.RunCommandAsync(sbCommand.ToString());
     }
 }

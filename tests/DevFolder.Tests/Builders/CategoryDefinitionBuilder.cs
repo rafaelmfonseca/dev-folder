@@ -1,4 +1,4 @@
-﻿using DevFolder.Verbs;
+﻿using DevFolder.Options;
 
 namespace DevFolder.Tests.Builders;
 
@@ -15,7 +15,7 @@ public class CategoryDefinitionBuilder
         };
     }
 
-    public CategoryDefinitionBuilder WithRepository(string url, string folder)
+    public CategoryDefinitionBuilder WithRepository(string url, string folder = null)
     {
         _categoryDefinition.Repositories.Add(new RepositoryDefinition
         {

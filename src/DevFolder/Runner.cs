@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using DevFolder.Commands;
+using DevFolder.Exceptions;
 using DevFolder.Verbs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,40 +9,32 @@ namespace DevFolder;
 
 public class Runner
 {
+    private readonly CommandLineParseResult _commandLineParseResult;
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger _logger;
 
     public Runner(
         ILogger<Runner> logger,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        CommandLineParseResult commandLineParseResult)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _commandLineParseResult = commandLineParseResult;
     }
 
-    public async Task RunAsync(string[] args)
+    public async Task RunAsync()
     {
-        var result = Parser.Default.ParseArguments<CloneVerb>(args);
-
-        if (result is null)
+        if (!_commandLineParseResult.IsParsed)
         {
-            _logger.LogInformation("Invalid arguments.");
-
-            return;
+            throw new InvalidEnvArgumentsException("Invalid environment arguments.");
         }
 
-        if (result is Parsed<CloneVerb>)
+        if (_commandLineParseResult.CloneVerbInstance is not null)
         {
             var cloneCommand = _serviceProvider.GetService<CloneCommand>();
 
-            try
-            {
-                await cloneCommand.Execute();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while executing clone command.");
-            }
+            await cloneCommand.Execute();
         }
     }
 }

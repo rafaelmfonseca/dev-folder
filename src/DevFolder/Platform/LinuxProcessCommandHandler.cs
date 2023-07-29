@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace DevFolder.Platform;
 
-public class LinuxCommandHandler : IProcessCommandHandler
+public class LinuxProcessCommandHandler : IProcessCommandHandler
 {
-    private readonly ILogger<LinuxCommandHandler> _logger;
+    private readonly ILogger<IProcessCommandHandler> _logger;
 
-    public LinuxCommandHandler(ILogger<LinuxCommandHandler> logger)
+    public LinuxProcessCommandHandler(ILogger<IProcessCommandHandler> logger)
     {
         _logger = logger;
     }

@@ -1,4 +1,4 @@
-﻿namespace DevFolder.Verbs;
+﻿namespace DevFolder.Options;
 
 public class RepositoryDefinition
 {

@@ -1,5 +1,5 @@
 ﻿using DevFolder.Operations;
-using DevFolder.Verbs;
+using DevFolder.Options;
 using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 
@@ -7,13 +7,13 @@ namespace DevFolder.Commands;
 
 public class CloneCommand
 {
-    private readonly GitCloneOperation _gitCloneOperation;
+    private readonly IGitCloneOperation _gitCloneOperation;
     private readonly OptionsFile _optionsFile;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger _logger;
 
     public CloneCommand(
-        GitCloneOperation gitCloneOperation,
+        IGitCloneOperation gitCloneOperation,
         OptionsFile optionsFile,
         IFileSystem fileSystem,
         ILogger<CloneCommand> logger)
@@ -60,7 +60,8 @@ public class CloneCommand
 
             foreach (var repository in category.Repositories)
             {
-                var repositoryFolder = !string.IsNullOrEmpty(repository.Folder) ? Path.Combine(categoryPath, repository.Folder) : null;
+                var repositoryFolder = !string.IsNullOrEmpty(repository.Folder) ?
+                    Path.Combine(categoryPath, repository.Folder) : categoryPath;
 
                 await _gitCloneOperation.Execute(repository.Url, repositoryFolder);
             }

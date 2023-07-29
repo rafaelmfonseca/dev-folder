@@ -1,7 +1,7 @@
 ﻿using DevFolder.Exceptions;
 using DevFolder.Tests.Builders;
 using DevFolder.Tests.TestUtilities;
-using DevFolder.Verbs;
+using DevFolder.Options;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
