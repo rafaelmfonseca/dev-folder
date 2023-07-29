@@ -1,5 +1,4 @@
 ﻿using DevFolder.Options;
-using System.Text.Json;
 
 namespace DevFolder.Tests.Builders;
 

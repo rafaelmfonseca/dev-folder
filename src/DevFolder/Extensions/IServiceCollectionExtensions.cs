@@ -1,12 +1,12 @@
-﻿using DevFolder.Commands;
+﻿using CommandLine;
+using DevFolder.Commands;
 using DevFolder.Operations;
-using DevFolder.Platform;
 using DevFolder.Options;
+using DevFolder.Platform;
+using DevFolder.Verbs;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System.IO.Abstractions;
-using DevFolder.Verbs;
-using CommandLine;
 
 namespace DevFolder.Extensions;
 

@@ -1,5 +1,4 @@
-﻿using CommandLine;
-using DevFolder.Commands;
+﻿using DevFolder.Commands;
 using DevFolder.Exceptions;
 using DevFolder.Verbs;
 using Microsoft.Extensions.DependencyInjection;

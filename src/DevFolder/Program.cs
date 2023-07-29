@@ -1,5 +1,4 @@
-﻿using DevFolder.Commands;
-using DevFolder.Extensions;
+﻿using DevFolder.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
