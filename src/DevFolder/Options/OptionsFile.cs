@@ -25,16 +25,16 @@ public class OptionsFile
 
         if (!_fileSystem.File.Exists(optionsFilePath))
         {
-            throw new InvalidOptionsException($"Options file not found at {optionsFilePath}!");
+            throw new InvalidOptionsException($"Options file not found at \"{optionsFilePath}\"!");
         }
 
         var optionsContent = _fileSystem.File.Open(optionsFilePath, FileMode.Open);
 
         var options = await JsonSerializer.DeserializeAsync<OptionsDefinition>(optionsContent, _deserializerOptions);
 
-        if (options is null || !options.HasCategories())
+        if (options is null)
         {
-            throw new InvalidOptionsException($"Options file at {optionsFilePath} is null or has no categories!");
+            throw new InvalidOptionsException($"Options file at \"{optionsFilePath}\" is null!");
         }
 
         return options;

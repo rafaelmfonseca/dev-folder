@@ -28,21 +28,25 @@ public class CloneCommand
     {
         var options = await _optionsFile.Read();
 
-        if (options is null)
-        {
-            return;
-        }
-
         foreach (var category in options.Categories)
         {
-            if (category is null || !category.HasRepositories())
+            if (category is null)
             {
+                _logger.LogError($"Found a category \"null\"!");
+
                 continue;
             }
 
             if (string.IsNullOrWhiteSpace(category.Folder))
             {
-                _logger.LogError($"Category folder is empty!");
+                _logger.LogError($"Found a category with property \"folder\" empty!");
+
+                continue;
+            }
+
+            if (!category.HasRepositories())
+            {
+                _logger.LogError($"Category with folder \"{category.Folder}\" has no repositories!");
 
                 continue;
             }

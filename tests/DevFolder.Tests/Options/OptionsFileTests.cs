@@ -53,21 +53,17 @@ internal class OptionsFileTests
 
         await act.Should()
             .ThrowAsync<InvalidOptionsException>()
-            .WithMessage(@"Options file not found at c:\demo\options.json!");
+            .WithMessage(@"Options file not found at ""c:\demo\options.json""!");
     }
 
     [Test]
-    public async Task ReadShouldThrowIfOptionsHasNoCategories()
+    public async Task ReadShouldThrowIfOptionsIsNull()
     {
         var currentDirectory = @"c:\demo";
 
-        var optionsDefinitionBuilder = new OptionsDefinitionBuilder();
-
-        var optionsContent = optionsDefinitionBuilder.Build();
-
         var helper = new DevFolderTestHelper();
 
-        helper.WithOptionsFile(optionsContent, currentDirectory);
+        helper.WithOptionsFile(null, currentDirectory);
 
         var optionsFile = helper.ServiceProvider.GetService<OptionsFile>();
 
@@ -75,6 +71,6 @@ internal class OptionsFileTests
 
         await act.Should()
             .ThrowAsync<InvalidOptionsException>()
-            .WithMessage(@"Options file at c:\demo\options.json is null or has no categories!");
+            .WithMessage(@"Options file at ""c:\demo\options.json"" is null!");
     }
 }
