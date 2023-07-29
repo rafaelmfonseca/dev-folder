@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DevFolder.Operations;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Text;
 
 namespace DevFolder.Platform;
 
@@ -16,37 +18,36 @@ public class WindowsProcessCommandHandler : IProcessCommandHandler
     {
         try
         {
-            var process = new Process
+            using var process = new Process();
+
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = $"/c \"{command}\"";
+            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+            process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+
+            process.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs e)
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c \"{command}\"",
-                    WorkingDirectory = workingDirectory,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
+                _logger.LogError(e.Data);
             };
+
+            process.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e)
+            {
+                _logger.LogInformation(e.Data);
+            };
+
             process.Start();
 
-            var output = process.StandardOutput.ReadToEnd().Trim();
-            var error = process.StandardError.ReadToEnd().Trim();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
 
             await process.WaitForExitAsync();
 
-            _logger.LogInformation($"Output: {output}");
-
-            if (process.ExitCode != 0)
-            {
-                _logger.LogError(error);
-            }
-            else
-            {
-                _logger.LogInformation($"Error: {error}");
-            }
-            _logger.LogInformation($"ExitCode: {process.ExitCode}");
+            _logger.LogInformation("ExitCode: {exitCode}", process.ExitCode);
         }
         catch (Exception e)
         {

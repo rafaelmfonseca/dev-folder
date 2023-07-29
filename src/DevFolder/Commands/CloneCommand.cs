@@ -48,12 +48,12 @@ public class CloneCommand
 
             if (!category.HasRepositories())
             {
-                _logger.LogError($"Category with folder \"{category.Folder}\" has no repositories!");
+                _logger.LogError("Category with folder \"{folder}\" has no repositories!", category.Folder);
 
                 continue;
             }
 
-            _logger.LogInformation($"Current category folder: {category.Folder}");
+            _logger.LogInformation("Current category folder: {folder}", category.Folder);
 
             var categoryDirectory = Path.Combine(currentDirectory, category.Folder);
 

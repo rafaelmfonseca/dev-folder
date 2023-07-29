@@ -6,7 +6,7 @@ namespace DevFolder.Options;
 
 public class OptionsFile
 {
-    private static JsonSerializerOptions _deserializerOptions =
+    private readonly static JsonSerializerOptions _deserializerOptions =
         new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     private readonly string _fileName = "options.json";
 

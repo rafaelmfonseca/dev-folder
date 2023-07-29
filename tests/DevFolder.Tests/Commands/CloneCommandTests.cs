@@ -11,7 +11,7 @@ namespace DevFolder.Tests.Commands;
 internal class CloneCommandTests
 {
     [Test]
-    public async Task ExecuteShouldCloneAllRepositories()
+    public async Task ExecuteShouldCallCloneOperationsWithCorrectArguments()
     {
         var currentDirectory = @"c:\demo";
 
@@ -59,7 +59,7 @@ internal class CloneCommandTests
 
     [TestCase("")]
     [TestCase(null)]
-    public async Task ExecuteShouldIgnoreCategoriesWithoutFolder(string emptyFolderCategory)
+    public async Task ExecuteShouldIgnoreCategoriesWithInvalidFolder(string invalidFolderCategory)
     {
         var currentDirectory = @"c:\demo";
 
@@ -71,7 +71,7 @@ internal class CloneCommandTests
             categoryDefinitionBuilder.WithRepository("git@github.com:jbogard/MediatR.git");
         });
 
-        optionsDefinitionBuilder.WithCategory(emptyFolderCategory, categoryDefinitionBuilder =>
+        optionsDefinitionBuilder.WithCategory(invalidFolderCategory, categoryDefinitionBuilder =>
         {
             categoryDefinitionBuilder.WithRepository("git@github.com:bitwarden/clients.git", "bitwarden_clients");
             categoryDefinitionBuilder.WithRepository("git@github.com:storybookjs/storybook.git");

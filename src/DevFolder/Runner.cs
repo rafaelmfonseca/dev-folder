@@ -33,7 +33,8 @@ public class Runner
             throw new InvalidEnvArgumentsException("Invalid environment arguments.");
         }
 
-        _logger.LogInformation($"Current folder: \"{_fileSystem.Directory.GetCurrentDirectory()}\".");
+        _logger.LogInformation("Current folder: \"{currentDirectory}\".",
+            _fileSystem.Directory.GetCurrentDirectory());
 
         if (_commandLineParseResult.CloneVerbInstance is not null)
         {

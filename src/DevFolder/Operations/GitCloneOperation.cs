@@ -19,7 +19,8 @@ public class GitCloneOperation : IGitCloneOperation
 
     public async Task Execute(string url, string workingDirectory, string repositoryFolderName = null)
     {
-        _logger.LogInformation(@$"Cloning ""{url}"" into ""{workingDirectory}"" with folder: ""{repositoryFolderName}""...");
+        _logger.LogInformation("Cloning \"{url}\" into \"{workingDirectory}\" with folder: \"{repositoryFolderName}\"...",
+            url, workingDirectory, repositoryFolderName);
 
         var sbCommand = new StringBuilder();
 
@@ -27,13 +28,13 @@ public class GitCloneOperation : IGitCloneOperation
 
         if (!string.IsNullOrEmpty(url))
         {
-            sbCommand.Append(" ");
+            sbCommand.Append(' ');
             sbCommand.Append(url);
         }
 
         if (!string.IsNullOrEmpty(repositoryFolderName))
         {
-            sbCommand.Append(" ");
+            sbCommand.Append(' ');
             sbCommand.Append("\"" + repositoryFolderName + "\"");
         }
 
