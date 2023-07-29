@@ -1,5 +1,4 @@
 ﻿using DevFolder.Exceptions;
-using Microsoft.Extensions.Logging;
 using System.IO.Abstractions;
 using System.Text.Json;
 
