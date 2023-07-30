@@ -6,11 +6,12 @@ public class CategoryDefinitionBuilder
 {
     private readonly CategoryDefinition _categoryDefinition;
 
-    public CategoryDefinitionBuilder(string folder)
+    public CategoryDefinitionBuilder(string folder, bool ignore)
     {
         _categoryDefinition = new CategoryDefinition
         {
             Folder = folder,
+            Ignore = ignore,
             Repositories = new List<RepositoryDefinition>()
         };
     }

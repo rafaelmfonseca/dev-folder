@@ -14,15 +14,20 @@ public class OptionsDefinitionBuilder
         };
     }
 
-    public CategoryDefinitionBuilder WithCategory(string folder, Action<CategoryDefinitionBuilder> configure)
+    public CategoryDefinitionBuilder WithCategory(string folder, bool ignore, Action<CategoryDefinitionBuilder> configure)
     {
-        var categoryBuilder = new CategoryDefinitionBuilder(folder);
+        var categoryBuilder = new CategoryDefinitionBuilder(folder, ignore);
 
         configure(categoryBuilder);
 
         _optionsDefinition.Categories.Add(categoryBuilder.Build());
 
         return categoryBuilder;
+    }
+
+    public CategoryDefinitionBuilder WithCategory(string folder, Action<CategoryDefinitionBuilder> configure)
+    {
+        return WithCategory(folder, false, configure);
     }
 
     public OptionsDefinition Build()

@@ -46,6 +46,13 @@ public class CloneCommand
                 continue;
             }
 
+            if (category.Ignore)
+            {
+                _logger.LogInformation("Category \"{category}\" ignored!", category.Folder);
+
+                continue;
+            }
+
             if (!category.HasRepositories())
             {
                 _logger.LogError("Category with folder \"{folder}\" has no repositories!", category.Folder);
